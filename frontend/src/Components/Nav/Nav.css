@@ -1,0 +1,180 @@
+/* *{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+header{
+    width: 100%;
+    height: 121px;
+    background-color: #324872;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+h1{
+    color: #fff;
+}
+.nav{
+    width: 90%;
+    height: 100%;
+    display: flex;
+    justify-content: space-evenly
+}
+.navLinks{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10rem;
+}
+.navItems{
+    gap: 1rem;
+    display: flex;
+}
+.navItems a{
+    text-decoration: none;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 8rem;
+    width: 8rem;
+}
+.navItems a:hover{
+    background-color: hsla(0, 0%, 85%, 0.11); 
+    transform: scale(1.3);
+    transition: 1s;
+}
+
+.navOthers{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 2rem;
+}
+.navOthers input{
+    height: 3rem;
+    width: 300px;
+
+    padding: 10px;
+
+    border-radius: 12px;
+    border: none;
+}
+.navOthersIcons{
+    display: flex;
+    gap: 1rem;
+}
+.navOthersIcons :hover{
+    transform: scale(1.3);
+    transition: 1s;
+} */
+
+/* Variáveis CSS para cores e tamanhos */
+:root {
+    --primary-color: #324872;
+    --secondary-color: #fff;
+    --hover-color: hsla(0, 0%, 85%, 0.11);
+    --transition-speed: 0.3s;
+    --border-radius: 12px;
+    --gap-small: 1rem;
+    --gap-medium: 2rem;
+    --gap-large: 10rem;
+  }
+  
+  /* Reset básico */
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Estilos do Header */
+  header {
+    width: 100%;
+    height: 121px;
+    background-color: var(--primary-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .nav h1 {
+    color: var(--secondary-color);
+  }
+  
+  /* Navegação Principal */
+  .nav {
+    width: 90%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* Links de Navegação */
+  .navLinks {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-large);
+  }
+  
+  .navItems {
+    display: flex;
+    gap: var(--gap-small);
+  }
+  
+  .navItems a {
+    text-decoration: none;
+    color: var(--secondary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 8rem;
+    width: 8rem;
+    border-radius: var(--border-radius);
+    transition: background-color var(--transition-speed), transform var(--transition-speed);
+  }
+  
+  .navItems a:hover {
+    background-color: var(--hover-color);
+    transform: scale(1.1);
+  }
+  
+  /* Outros Elementos do Header */
+  .navOthers {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-medium);
+  }
+  
+  .navOthers input {
+    height: 3rem;
+    width: 300px;
+    padding: 10px;
+    border-radius: var(--border-radius);
+    border: none;
+    outline: none;
+    transition: box-shadow var(--transition-speed);
+  }
+  
+  .navOthers input:focus {
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+  }
+  
+  .navOthersIcons {
+    display: flex;
+    gap: var(--gap-small);
+  }
+  
+  .navOthersIcons svg {
+    cursor: pointer;
+    transition: transform var(--transition-speed);
+  }
+  
+  .navOthersIcons svg:hover {
+    transform: scale(1.2);
+  }

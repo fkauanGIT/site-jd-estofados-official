@@ -1,0 +1,14 @@
+.body{
+    text-align: center;
+    gap: 5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.cards_products_colchoes{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    
+}

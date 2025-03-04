@@ -104,6 +104,11 @@ h1{
   
   .nav h1 {
     color: var(--secondary-color);
+    font-size: 2rem;
+  }
+
+  .nav a{
+    text-decoration: none;
   }
   
   /* Navegação Principal */

@@ -1,68 +1,52 @@
-
+import { useEffect, useState, useCallback } from "react";
 import Card from "../../Components/Card/Card";
 import Nav from "../../Components/Nav/Nav";
 import { Product } from "../../Models/Product";
-import "./Home.css"
-
+import "./Home.css";
 
 const Home = () => {
+  const [bestSellers, setBestSellers] = useState<Product[]>([]);
+  const [promotions, setPromotions] = useState<Product[]>([]);
 
-  const handleBuy = (produto: Product) => {
-    console.log("Produto comprado:", produto);
-    alert(`Você comprou: ${produto.nome}`);
-  };
-  
+  const fetchProducts = useCallback(async (endpoint: string, setter: (data: Product[]) => void) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/products/${endpoint}`);
+      if (!response.ok) throw new Error(`Erro ao buscar ${endpoint}`);
+      const data = await response.json();
+      setter(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchProducts("bestsellers", setBestSellers);
+    fetchProducts("promotions", setPromotions);
+  }, [fetchProducts]);
+
 
   return (
-    <> 
-        <Nav />
-
-        <div className="titlle">
-          <h1>Bem-vindo à nossa loja!</h1>
-          <p>Confira nossos produtos incríveis.</p>
-        </div>
-
-        <div className="card-container">
-        {produtos.map((produto) => (
-          <Card
-            key={produto.id}
-            produto={produto}
-            onBuy={() => handleBuy(produto)}
-          />
-        ))}
+    <>
+      <Nav />
+      <div className="titlle">
+        <h1>Bem-vindo à nossa loja!</h1>
+        <h3>Confira nossos produtos incríveis.</h3>
       </div>
+
+      {[{ title: "Mais Vendidos", products: bestSellers }, { title: "Promoções", products: promotions }].map(
+        ({ title, products }) => (
+          <section key={title}>
+            <h2>{title}</h2>
+            <div className="card-container">
+              {products.map((produto) => (
+                <Card key={produto.id} produto={produto} />
+              ))}
+            </div>
+          </section>
+        )
+      )}
     </>
   );
 };
-
-const produtos: Product[] = [
-  {
-    id: 1,
-    nome: "Colchão Ortopédico",
-    descricao: "Conforto e suporte para uma noite de sono perfeita.",
-    precoDescont: 1200,
-    preco: 1200.0,
-    imagem: "https://via.placeholder.com/300",
-    categoria: "Colchões",
-  },
-  {
-    id: 2,
-    nome: "Sofá Retrátil",
-    descricao: "Sofá confortável e moderno para sua sala.",
-    precoDescont: 1200,
-    preco: 2500.0,
-    imagem: "https://via.placeholder.com/300",
-    categoria: "Sofás",
-  },
-  {
-    id: 3,
-    nome: "Cama Queen Size",
-    descricao: "Cama espaçosa com design elegante.",
-    precoDescont: 1200,
-    preco: 1800.0,
-    imagem: "https://via.placeholder.com/300",
-    categoria: "Camas",
-  },
-];
 
 export default Home;

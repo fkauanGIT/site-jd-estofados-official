@@ -37,4 +37,4 @@
 
 # Arquivos sensíveis
 HELP.md
-backend/src/main/resources/application.properties
+src/main/resources/application.properties

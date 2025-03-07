@@ -1,9 +1,10 @@
 package backend.controllers;
 
-import backend.models.Product;
+import backend.models.Products;
 import backend.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,51 +16,92 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    // Listar todos os produtos
+    // GET: Retorna todos os produtos
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public ResponseEntity<List<Products>> getAllProducts() {
+        List<Products> products = productService.getAllProducts();
+        return ResponseEntity.ok(products);
     }
 
-    // Filtrar produtos por categoria
+    // GET: Retorna produtos filtrados por categoria
     @GetMapping("/category/{category}")
-    public List<Product> getProductsByCategory(@PathVariable String category) {
-        return productService.getProductsByCategory(category);
+    public ResponseEntity<List<Products>> getProductsByCategory(@PathVariable String category) {
+        List<Products> products = productService.getProductsByCategory(category);
+        return ResponseEntity.ok(products);
     }
 
-    // Filtrar produtos por faixa de preço
+    // GET: Retorna produtos filtrados por faixa de preço
     @GetMapping("/price")
-    public List<Product> getProductsByPriceRange(@RequestParam Double min, @RequestParam Double max) {
-        return productService.getProductsByPriceRange(min, max);
+    public ResponseEntity<List<Products>> getProductsByPriceRange(
+            @RequestParam Double min, 
+            @RequestParam Double max) {
+        List<Products> products = productService.getProductsByPriceRange(min, max);
+        return ResponseEntity.ok(products);
     }
 
-    // Filtrar produtos por categoria e preço ao mesmo tempo
-    @GetMapping("/filter")
-    public List<Product> getProductsByCategoryAndPrice(
-        @RequestParam String category,
-        @RequestParam Double min,
-        @RequestParam Double max
-    ) {
-        return productService.getProductsByCategoryAndPrice(category, min, max);
+    // GET: Retorna produtos que contêm o nome especificado (busca ignorando maiúsculas/minúsculas)
+    @GetMapping("/search")
+    public ResponseEntity<List<Products>> searchProductsByName(@RequestParam String name) {
+        List<Products> products = productService.searchProductsByName(name);
+        return ResponseEntity.ok(products);
     }
 
-    // Produtos em promoção
+    // GET: Retorna produtos em promoção
     @GetMapping("/promotions")
-    public List<Product> getPromotions() {
-        return productService.getPromotions();  // Chama o serviço que retorna produtos com promoção
+    public ResponseEntity<List<Products>> getPromotions() {
+        List<Products> products = productService.getPromotions();
+        return ResponseEntity.ok(products);
     }
 
-    // Produtos mais vendidos
+    // GET: Retorna os 10 produtos mais vendidos (ordenados por quantidade vendida)
     @GetMapping("/bestsellers")
-    public List<Product> getBestSellers() {
-        return productService.getBestSellers();
+    public ResponseEntity<List<Products>> getBestSellers() {
+        List<Products> products = productService.getBestSellers();
+        return ResponseEntity.ok(products);
     }
 
+    // GET: Retorna um produto pelo ID
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+    public ResponseEntity<Products> getProductById(@PathVariable Long id) {
         return productService.getProductById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    // POST: Cria um novo produto
+    @PostMapping("/newProduct")
+    public ResponseEntity<Products> createProduct(@RequestBody Products product) {
+        Products savedProduct = productService.saveProduct(product);
+        return ResponseEntity.ok(savedProduct);
+    }
+
+    // POST: Cria vários produtos
+    @PostMapping("/newProducts")
+    public ResponseEntity<List<Products>> createProducts(@RequestBody List<Products> products) {
+        List<Products> savedProducts = productService.saveProducts(products);
+        return ResponseEntity.ok(savedProducts);
+    }
+
+    // DELETE: Deleta um produto pelo ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProductById(@PathVariable Long id) {
+        productService.deleteProductById(id);
+        return ResponseEntity.noContent().build(); // Retorna 204 No Content
+    }
+
+    // DELETE: Deleta todos os produtos
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAllProducts() {
+        productService.deleteAllProducts();
+        return ResponseEntity.noContent().build(); // Retorna 204 No Content
+    }
+
+    // PUT: Atualiza um produto existente pelo ID
+    @PutMapping("/editProduct/{id}")
+    public ResponseEntity<Products> updateProductById(
+            @PathVariable Long id,
+            @RequestBody @Validated Products updatedProduct) { // Adicione @Valid para validação
+        Products product = productService.updateProductById(id, updatedProduct);
+        return ResponseEntity.ok(product); // Retorna o produto atualizado
+    }
 }

@@ -5,6 +5,7 @@ import Camas from '../Pages/Categorys/Camas/Camas';
 import Sofas from '../Pages/Categorys/Sofas/sofas';
 import Moveis from '../Pages/Categorys/Moveis/Moveis';
 import ProdutoDetalhes from '../Pages/ProductDetails/ProductDetails'; // Importe a página de detalhes do produto
+import SearchResults from '../Pages/SearchResult/SearchResult';
 
 const AppRoutes = () => {
   return (
@@ -15,7 +16,8 @@ const AppRoutes = () => {
         <Route path="/camas" element={<Camas />} />
         <Route path="/sofas" element={<Sofas />} />
         <Route path="/moveis" element={<Moveis />} />
-        <Route path="/produto/:id" element={<ProdutoDetalhes />} /> {/* Adicionada a rota de detalhes do produto */}
+        <Route path="/produto/:id" element={<ProdutoDetalhes />} /> 
+        <Route path="/search" element={<SearchResults />} />
       </Routes>
     </Router>
   );

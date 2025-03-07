@@ -1,12 +1,9 @@
 package backend.service;
 
-import backend.models.Product;
+import backend.models.Products;
 import backend.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,44 +14,95 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public List<Product> getAllProducts() {
+    // GET: Retorna todos os produtos
+    public List<Products> getAllProducts() {
         return productRepository.findAll();
     }
 
-    public List<Product> getProductsByCategory(String category) {
-        if (StringUtils.hasText(category)) {
-            return productRepository.findByCategory(category);
-        }
-        return List.of();
+    // GET: Retorna produtos por categoria
+    public List<Products> getProductsByCategory(String category) {
+        return productRepository.findByCategory(category);
     }
 
-    public List<Product> getProductsByPriceRange(Double minPrice, Double maxPrice) {
-        if (minPrice != null && maxPrice != null && minPrice < maxPrice) {
-            return productRepository.findByPriceBetween(minPrice, maxPrice);
-        }
-        return List.of();
+    // GET: Retorna produtos por faixa de preço
+    public List<Products> getProductsByPriceRange(Double min, Double max) {
+        return productRepository.findByPriceBetween(min, max);
     }
 
-    public List<Product> getProductsByCategoryAndPrice(String category, Double minPrice, Double maxPrice) {
-        if (StringUtils.hasText(category) && minPrice != null && maxPrice != null && minPrice < maxPrice) {
-            return productRepository.findByCategoryAndPriceBetween(category, minPrice, maxPrice);
-        }
-        return List.of();
+    // GET: Retorna produtos que contêm o nome especificado (busca ignorando maiúsculas/minúsculas)
+    public List<Products> searchProductsByName(String name) {
+        return productRepository.findByNameContainingIgnoreCase(name);
     }
 
-    public List<Product> getPromotions() {
+    // GET: Retorna produtos em promoção
+    public List<Products> getPromotions() {
         return productRepository.findByIsPromotionTrue();
     }
 
-    public List<Product> getBestSellers() {
-        return productRepository.findBySoldQuantityGreaterThan(50);
+    // GET: Retorna os 10 produtos mais vendidos (ordenados por quantidade vendida)
+    public List<Products> getBestSellers() {
+        return productRepository.findBySoldQuantityGreaterThan(10);
     }
 
-    public Page<Product> getProductsPage(int page, int size) {
-        return productRepository.findAll(PageRequest.of(page, size));
-    }
-
-    public Optional<Product> getProductById(Long id) {
+    // GET: Retorna um produto pelo ID
+    public Optional<Products> getProductById(Long id) {
         return productRepository.findById(id);
+    }
+
+    // POST: Salva um novo produto
+    public Products saveProduct(Products product) {
+        return productRepository.save(product);
+    }
+
+    // POST: Salva uma lista de produtos
+    public List<Products> saveProducts(List<Products> products) {
+        return productRepository.saveAll(products);
+    }
+
+    // DELETE: Deleta um produto pelo ID
+    public void deleteProductById(Long id) {
+        productRepository.deleteById(id);
+    }
+
+    // DELETE: Deleta todos os produtos
+    public void deleteAllProducts() {
+        productRepository.deleteAll();
+    }
+
+    // PUT: Atualiza um produto existente pelo ID
+    public Products updateProductById(Long id, Products updatedProduct) {
+        return productRepository.findById(id)
+                .map(product -> {
+                    // Atualiza apenas os campos não nulos
+                    if (updatedProduct.getName() != null) {
+                        product.setName(updatedProduct.getName());
+                    }
+                    if (updatedProduct.getDescription() != null) {
+                        product.setDescription(updatedProduct.getDescription());
+                    }
+                    if (updatedProduct.getPrice() != null) {
+                        product.setPrice(updatedProduct.getPrice());
+                    }
+                    if (updatedProduct.getCategory() != null) {
+                        product.setCategory(updatedProduct.getCategory());
+                    }
+                    if (updatedProduct.getImageUrl() != null) {
+                        product.setImageUrl(updatedProduct.getImageUrl());
+                    }
+                    if (updatedProduct.getStatus() != null) {
+                        product.setStatus(updatedProduct.getStatus());
+                    }
+                    if (updatedProduct.getIsPromotion() != null) {
+                        product.setIsPromotion(updatedProduct.getIsPromotion());
+                    }
+                    if (updatedProduct.getDiscount() != null) {
+                        product.setDiscount(updatedProduct.getDiscount());
+                    }
+                    if (updatedProduct.getSoldQuantity() != null) {
+                        product.setSoldQuantity(updatedProduct.getSoldQuantity());
+                    }
+                    return productRepository.save(product); // Salva as alterações
+                })
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado com o ID: " + id));
     }
 }

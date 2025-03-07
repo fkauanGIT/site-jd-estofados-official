@@ -7,7 +7,7 @@ import lombok.*;
 @Table(name = "products")
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
-public class Product {
+public class Products {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,19 +16,31 @@ public class Product {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String description;
 
-    @Column(nullable = false, columnDefinition = "DOUBLE DEFAULT 0.0")
+    @Column(nullable = false)
     private Double price = 0.0;
 
+    @Column(nullable = false)
     private String category;
+
     private String status;
-    private String image_url;
+
+    @Column(nullable = false)
+    private String imageUrl;
+
     private Boolean isPromotion = false;
 
-    @Column(columnDefinition = "DOUBLE DEFAULT 0.0")
     private Double discount = 0.0;
 
-    @Column(name = "sold_quantity", columnDefinition = "INTEGER DEFAULT 0")
     private Integer soldQuantity = 0;
+
+    @PrePersist
+    @PreUpdate
+    public void validatePrice() {
+        if(price < 0){
+            throw new IllegalArgumentException("Valores negativos não são aceitos");
+        }
+    }
 }
